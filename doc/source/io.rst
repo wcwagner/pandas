@@ -441,7 +441,7 @@ individual columns:
     ``ValueError``.
 
 .. note::
-   Reading in data with mixed dtypes and relying on pandas
+   Reading in data with mixed dtypes and relying on ``pandas``
    to infer them is not recommended. In doing so, the parsing engine will
    loop over all the dtypes, trying to convert them to an actual
    type; if something breaks during that process, the engine will go to the
@@ -455,8 +455,8 @@ individual columns:
 
    will result with `mixed_df` containing an ``int`` dtype for the first
    262,144 values, and ``str`` for the others due to a problem during
-   parsing. Fortunately, pandas offers a few ways to ensure that the column(s)
-   contains only one ``dtype``. For instance, you could use the ``converters``
+   parsing. Fortunately, ``pandas`` offers a few ways to ensure that the column(s)
+   contain only one ``dtype``. For instance, you could use the ``converters``
    argument of :func:`~pandas.read_csv`.
 
    .. code-block:: python
