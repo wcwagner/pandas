@@ -440,6 +440,40 @@ individual columns:
     Specifying ``dtype`` with ``engine`` other than 'c' raises a
     ``ValueError``.
 
+.. note::
+   Reading in data with mixed dtypes and relying on pandas
+   to infer them is not recommended. In doing so, the parsing engine will
+   loop over all the dtypes, trying to convert them to an actual
+   type; if something breaks during that process, the engine will go to the
+   next ``dtype`` and the data is left modified in place. For example,
+
+   .. code-block:: python
+
+      df = pd.DataFrame({'col_1':range(500000) + ['a', 'b'] + range(500000)})
+      df.to_csv('foo')
+      mixed_df = pd.read_csv('foo')
+
+   will result with `mixed_df` containing an ``int`` dtype for the first
+   262,144 values, and ``str`` for the others due to a problem during
+   parsing. Fortunately, pandas offers a few ways to ensure that the column(s)
+   contains only one ``dtype``. For instance, you could use the ``converters``
+   argument of :func:`~pandas.read_csv`.
+
+   .. code-block:: python
+
+      pd.read_csv('foo', converters={'col_1':str})
+
+   Or you could use the :func:`~pandas.to_numeric` function to coerce the
+   dtypes after reading in the data,
+
+   .. code-block:: python
+
+      mixed_df = pd.read_csv('foo')
+      df = mixed_df.to_numeric(df['col_1'], errors='coerce')
+
+   which would convert all valid parsing to ints, leaving the invalid parsing
+   as ``NaN``.
+
 Naming and Using Columns
 ''''''''''''''''''''''''
 
